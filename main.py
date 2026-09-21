@@ -61,10 +61,37 @@ st.info("💡 이 그래프로 알 수 있는 것: (여기에 한 문장으로 �
 
 
 # -----------------------------
-# 구역 2. (다음 그래프 추가 예정)
+# 구역 2. 일관객 합계 상위 5편의 날짜별 일관객 비교
 # -----------------------------
-st.header("구역 2. (준비 중)")
-st.caption("다음 그래프가 여기에 추가될 예정입니다.")
+st.header("구역 2. 일관객 합계 상위 5편 비교")
+
+# 영화별 일관객 합계 계산 후 상위 5편 선정
+top5_movies = (
+    df.groupby("영화명")["일관객"].sum().sort_values(ascending=False).head(5).index.tolist()
+)
+
+top5_df = df[df["영화명"].isin(top5_movies)].sort_values("날짜")
+
+fig2 = px.line(
+    top5_df,
+    x="날짜",
+    y="일관객",
+    color="영화명",
+    markers=True,
+    title="일관객 합계 상위 5편의 날짜별 일관객 수",
+)
+fig2.update_traces(
+    hovertemplate="영화: %{fullData.name}<br>날짜: %{x|%Y-%m-%d}<br>일관객: %{y:,}명<extra></extra>"
+)
+fig2.update_layout(
+    xaxis_title="날짜",
+    yaxis_title="일관객 수(명)",
+    legend_title="영화명 (클릭해서 켜고 끄기)",
+)
+
+st.plotly_chart(fig2, use_container_width=True)
+
+st.info("💡 이 그래프로 알 수 있는 것: (여기에 한 문장으로 해석을 적어보세요)")
 
 
 # -----------------------------
