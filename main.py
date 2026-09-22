@@ -127,6 +127,43 @@ for _, row in top3_days.iterrows():
         hovertemplate="날짜: %{x|%Y-%m-%d}<br>합계 일관객: %{y:,}명<extra></extra>",
     )
 
-st.plotly_chart(fig3, use_container_width=True)
+# -----------------------------
+# 구역 4. 일관객 합계 TOP 10 (가로 막대그래프)
+# -----------------------------
+st.header("구역 4. 일관객 합계 TOP 10")
+
+movie_stats = (
+    df.groupby("영화명")
+    .agg(합계일관객=("일관객", "sum"), 순위권진입일수=("날짜", "count"))
+    .reset_index()
+    .sort_values("합계일관객", ascending=False)
+    .head(10)
+)
+
+# 가로 막대그래프에서 위쪽에 큰 값이 오도록 정렬 순서 지정
+movie_stats = movie_stats.sort_values("합계일관객", ascending=True)
+
+fig4 = px.bar(
+    movie_stats,
+    x="합계일관객",
+    y="영화명",
+    orientation="h",
+    custom_data=["순위권진입일수"],
+    title="일관객 합계 TOP 10",
+)
+fig4.update_traces(
+    hovertemplate=(
+        "영화: %{y}<br>"
+        "합계 일관객: %{x:,}명<br>"
+        "10위권 진입 일수: %{customdata[0]}일<extra></extra>"
+    )
+)
+fig4.update_layout(
+    xaxis_title="합계 일관객 수(명)",
+    yaxis_title="영화명",
+    yaxis=dict(categoryorder="total ascending"),
+)
+
+st.plotly_chart(fig4, use_container_width=True)
 
 st.info("💡 이 그래프로 알 수 있는 것: (여기에 한 문장으로 해석을 적어보세요)")
