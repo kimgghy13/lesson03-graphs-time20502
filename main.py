@@ -127,6 +127,11 @@ for _, row in top3_days.iterrows():
         hovertemplate="날짜: %{x|%Y-%m-%d}<br>합계 일관객: %{y:,}명<extra></extra>",
     )
 
+st.plotly_chart(fig3, use_container_width=True)
+
+st.info("💡 이 그래프로 알 수 있는 것: (여기에 한 문장으로 해석을 적어보세요)")
+
+
 # -----------------------------
 # 구역 4. 일관객 합계 TOP 10 (가로 막대그래프)
 # -----------------------------
